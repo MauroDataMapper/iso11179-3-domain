@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+    xmlns:iso-11179="https://www.iso.org/11179/-3/2012"
+    targetNamespace="https://www.iso.org/11179/-3/2012">
+    
+    <!-- 6.2 basic types -->
+    <!-- these 11179 types apparently correspond directly to xml schema base types.  
+        provides a mechanism for varying the type if they prove different
+        -->
+        
+    <xs:simpleType name="Boolean">
+        <xs:restriction base="xs:boolean"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="String">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Integer">
+        <xs:restriction base="xs:integer"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Date">
+        <xs:restriction base="xs:date"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Datetime">
+        <xs:restriction base="xs:dateTime"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Natural_Range">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]+|[0-9]+..[0-9\*]"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Notation">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Phone_Number">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{15}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- all means any of the following can optionally appear once -->
+    <xs:complexType name="Postal_Address">
+        <xs:all>
+            <xs:element name="organisation_name" type="iso-11179:String" minOccurs="1"/>
+            <xs:element name="department" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="building_name" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="subbuilding_name" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="po_box_number" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="street_address" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="double_dependent_locality" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="dependent_locality" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="post_town" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="city" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="state" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="unstructured_address" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="country" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="postcode" type="iso-11179:String" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <!--  doesn't make sense in an XML Schema context beyond a string -->
+    <xs:simpleType name="Sign">
+        <xs:restriction base="iso-11179:String"/>
+    </xs:simpleType>
+    
+    <!-- can we force xml lang elements? do we want language codes? is the lang element necessary with the language identification class -->
+    <xs:complexType name="Text">
+        <xs:simpleContent>
+            <xs:extension base="iso-11179:String">
+                <xs:attribute name="language" type="iso-11179:String"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="Value">
+        <xs:restriction base="iso-11179:String"/>
+    </xs:simpleType>
+    
+    <!-- 6.3 basic classes -->
+    
+    <xs:complexType name="Role">
+        <xs:sequence>
+            <xs:element name="title" type="iso-11179:Sign" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mail_address" type="iso-11179:Postal_Address" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="email_address" minOccurs="0" maxOccurs="unbounded" type="iso-11179:String"/>
+            <xs:element name="phone_number" minOccurs="0" maxOccurs="unbounded" type="iso-11179:Phone_Number"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Organization">
+        <xs:sequence>
+            <xs:element name="name" type="iso-11179:Sign" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="mail_address" type="iso-11179:Postal_Address" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="email_address" minOccurs="0" maxOccurs="unbounded" type="iso-11179:String"/>
+            <xs:element name="phone_number" minOccurs="0" maxOccurs="unbounded" type="iso-11179:Phone_Number"/>
+            <xs:element name="uri" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Document_Type">
+        <xs:all>
+            <xs:element name="identifier" type="iso-11179:String"/>
+            <xs:element name="description" type="iso-11179:Text"/>
+            <xs:element name="scheme_reference" type="iso-11179:Sign"/>
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:complexType name="Language_Identification">
+        <xs:sequence>
+            <xs:element name="language_identifier" minOccurs="1" maxOccurs="1" type="iso-11179:String"/>
+            <xs:element name="script_identifier" minOccurs="0" maxOccurs="1" type="iso-11179:String"/>
+            <xs:element name="geopolitical_territory_identifier" minOccurs="0" maxOccurs="1" type="iso-11179:String"/>
+            <xs:element name="variant_identifier" minOccurs="0" maxOccurs="unbounded" type="iso-11179:String"/>
+            <xs:element name="extension_identifier" minOccurs="0" maxOccurs="unbounded" type="iso-11179:String"/>
+            <xs:element name="private_use_qualifier" minOccurs="0" maxOccurs="1" type="iso-11179:String"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!--variation: create reference document identifier type so reference documents can be specified separately-->
+    <xs:simpleType name="Reference_Document_Identifier">
+        <xs:restriction base="iso-11179:String"/>
+    </xs:simpleType>
+    
+    <xs:complexType name="Reference_Document">
+        <xs:sequence>
+            <xs:element name="identifier" type="iso-11179:Reference_Document_Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="type_description" type="iso-11179:Document_Type" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="language_identifier" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="notation" type="iso-11179:Notation" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="title" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="provider" type="iso-11179:Organization" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:choice>
+                <xs:element name="uri" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="xml-document" type="xs:anyType" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="binary-document" type="xs:base64Binary" minOccurs="0" maxOccurs="1"/>                
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Registration_Authority_Identifier">
+        <xs:sequence>
+            <xs:element name="international_code_designator" type="iso-11179:String" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="organization_identifier" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="organization_part_identifier" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="OPI_source" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Individual">
+        <xs:sequence>
+            <xs:element name="name" type="iso-11179:Sign" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="title" type="iso-11179:Sign" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mail_address" type="iso-11179:Postal_Address" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="email_address" minOccurs="0" maxOccurs="unbounded" type="iso-11179:String"/>
+            <xs:element name="phone_number" minOccurs="0" maxOccurs="unbounded" type="iso-11179:Phone_Number"/>
+            <xs:element name="role" type="iso-11179:Role" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Contact">
+        <xs:sequence>
+            <xs:element name="individual" type="iso-11179:Individual" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="organization" type="iso-11179:Organization" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="role" type="iso-11179:Role" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+        
+    <xs:complexType name="Registry_Specification">
+        <xs:sequence>
+            <xs:element name="name" type="iso-11179:Sign" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="web_address" type="xs:anyURI" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="standard" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="conformance_level" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="character_repertoire" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="reference_document_identifier_form" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="primary_language" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="representation_class_scheme" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="context" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="comment" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- 7.2 Identification -->
+    <!-- XML Schema does not support multiple inheritance - groups are used here -->
+    
+    <xs:complexType name="Slot">
+        <xs:sequence>
+            <xs:element name="name" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="type" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="value" type="iso-11179:String" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!--variation: create namespace identifier type so namespaces can be specified separately-->
+    <xs:simpleType name="namespace-identifier">
+        <xs:restriction base="iso-11179:String"/>
+    </xs:simpleType>
+    
+    
+    <!-- variant from model - maintainer relationship is now the value of the RAI rather than to the RA directly-->
+    <xs:complexType name="Namespace">
+        <xs:sequence>
+            <xs:element name="identifier" type="iso-11179:namespace-identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="version" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="naming_authority" type="iso-11179:Organization"/>
+            <xs:element name="one_name_per_item_indicator" type="iso-11179:Boolean"/>
+            <xs:element name="one_item_per_name_indicator" type="iso-11179:Boolean"/>
+            <xs:element name="mandatory_naming_convention_indicator" type="iso-11179:Boolean"/>
+            <xs:element name="shorthand_prefix" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="scheme_reference" type="iso-11179:String" minOccurs="0"/>
+            <xs:element name="maintainer" type="iso-11179:Registration_Authority_Identifier"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Scoped_Identifier">
+        <xs:sequence>
+            <xs:element name="scope" type="iso-11179:namespace-identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="identifier" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="version" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="full_expansion" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="shorthand_expansion" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>    
+    
+    <xs:group name="Identified_Item">
+        <xs:sequence>
+            <xs:element name="identifier" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="slot" type="iso-11179:Slot" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+    
+    <!-- 7.3 Designation and Definition -->
+    
+    <xs:complexType name="Naming_Convention">
+        <xs:sequence>
+            <xs:group ref="iso-11179:Identified_Item" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="scope_rule" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="authority_rule" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="semantic_rule" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="syntactic_rule" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="lexical_rule" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="utilization" type="iso-11179:Namespace" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Definition">
+        <xs:sequence>
+            <xs:element name="text" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="language" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="source" type="iso-11179:Reference_Document_Identifier" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="scope" type="iso-11179:Definition_Context" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="designation_heading" type="iso-11179:Sign" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Designation">
+        <xs:sequence>
+            <xs:element name="convention" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="namespace" type="iso-11179:namespace-identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="scope" type="iso-11179:Designation_Context" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="sign" type="iso-11179:Sign" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="language" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="specific_definition" type="iso-11179:Definition" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+      
+    <xs:complexType name="Context">
+        <xs:sequence>
+            <xs:group ref="iso-11179:Identified_Item" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Designation" minOccurs="1" maxOccurs="unbounded">
+                <!--does not use the designation group so as to avoid referencing a context from within a context-->
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="convention" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="namespace" type="iso-11179:namespace-identifier" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="sign" type="iso-11179:Sign" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="language" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="specific_definition">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="text" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+                                    <xs:element name="language" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="source" type="iso-11179:Reference_Document_Identifier" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="designation_heading" type="iso-11179:Sign" minOccurs="0" maxOccurs="1"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <!--does not use the designation group so as to avoid referencing a context from within a context-->
+            <xs:element name="Definition" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="text" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="language" type="iso-11179:Language_Identification" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="source" type="iso-11179:Reference_Document_Identifier" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="designation_heading" type="iso-11179:Sign" minOccurs="0" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="Acceptability">
+        <xs:restriction base="iso-11179:String">
+            <xs:enumeration value="preferred"/>
+            <xs:enumeration value="admitted"/>
+            <xs:enumeration value="deprecated"/>
+            <xs:enumeration value="obsolete"/>
+            <xs:enumeration value="superseded"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="Designation_Context">
+        <xs:sequence>
+            <xs:element name="context" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="acceptability" type="iso-11179:Acceptability" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Definition_Context">
+        <xs:sequence>
+            <xs:element name="context" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="acceptability" type="iso-11179:Acceptability" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+  
+    <xs:group name="Designatable_Item">
+        <xs:sequence>
+            <xs:element name="designation" type="iso-11179:Designation" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="definition" type="iso-11179:Definition" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:complexType name="Reference">
+        <xs:sequence>
+            <xs:element name="type" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="reference_document" type="iso-11179:Reference_Document_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- 8 Registration -->
+    
+    <xs:complexType name="Submission_Record">
+        <xs:sequence>
+            <xs:element name="organization" type="iso-11179:Organization" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="contact" type="iso-11179:Contact" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Stewardship_Record">
+        <xs:sequence>
+            <xs:element name="organization" type="iso-11179:Organization" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="contact" type="iso-11179:Contact" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+  
+    <xs:complexType name="Registration_State">
+        <xs:sequence>
+            <xs:element name="registration_status" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="effective_date" type="iso-11179:Datetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="until_date" type="iso-11179:Datetime" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="administrative_note" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unresolved_issue" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="administrative_status" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="previous_state" type="iso-11179:Registration_State" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Registrar">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Contact">
+                <xs:sequence>
+                    <xs:element name="identifier" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>    
+    
+    <xs:complexType name="Registration_Authority">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Organization">
+                <xs:sequence>
+                    <xs:element name="registration_authority_identifier" type="iso-11179:Registration_Authority_Identifier" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="documentation_language_identifier" type="iso-11179:Language_Identification" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="registrar" type="iso-11179:Registrar" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="registration_namespace" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Registration">
+        <xs:sequence>
+            <xs:element name="registration_authority" type="iso-11179:Registration_Authority_Identifier" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="state" type="iso-11179:Registration_State" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:group name="Registered_Item">
+        <xs:sequence>
+            <xs:element name="submission_record" type="iso-11179:Submission_Record" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="document_reference" type="iso-11179:Reference" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:group name="Administered_Item">
+        <xs:sequence>
+            <xs:group ref="iso-11179:Registered_Item" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="registration_state" type="iso-11179:Registration" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="stewardship_record" type="iso-11179:Stewardship_Record" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="creation_date" type="iso-11179:Datetime" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="last_change_date" type="iso-11179:Datetime" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="change_description" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="explanatory_comment" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="origin" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="attached_item" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:group name="Attached_Item">
+        <xs:sequence>
+            <xs:element name="owner" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+    
+    <!-- 9 concepts package
+        here many of the relations are broke apart into identifiers which are scoped identifiers from the domain of the relationship
+        target.  all relations are bidirectional and can be declared at either or both ends unless specifically modeled otherwise
+        in the standard, with the exception of relation/link/assertion which are only declared from the relation side so as not to break
+        the inheritance between link and assertion
+        -->
+    
+    <!--concepts are part of a concept system and generally will not be administered separately-->
+    <!--concepts are part of a classification system and are not classified separately-->
+    <xs:complexType name="Concept">
+        <xs:sequence>
+            <xs:group ref="iso-11179:Identified_Item" minOccurs="0" maxOccurs="1"/>
+            <xs:group ref="iso-11179:Designatable_Item" minOccurs="0" maxOccurs="1"/>
+            
+            <xs:element name="assertion_about" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="link_end" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Relation_Role">
+       <xs:complexContent>
+           <xs:extension base="iso-11179:Concept">
+               <xs:sequence>
+                   <xs:element name="multiplicity" type="iso-11179:Natural_Range" minOccurs="0" maxOccurs="1"/>
+                   <xs:element name="ordinal" type="iso-11179:Integer" minOccurs="0" maxOccurs="1"/>
+                   
+                   <xs:element name="source" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>                   
+               </xs:sequence>
+           </xs:extension>
+       </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="Relation">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Concept">
+                <xs:sequence>
+                    <xs:element name="arity" type="iso-11179:Natural_Range" minOccurs="0" maxOccurs="1"/>
+                    
+                    <xs:element name="role" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="assertion_of" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="link" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:simpleType name="Reflexivity">
+        <xs:restriction base="iso-11179:String">
+            <xs:enumeration value="reflexive"/>
+            <xs:enumeration value="irreflexive"/>
+            <xs:enumeration value="antireflexive"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Symmetry">
+        <xs:restriction base="iso-11179:String">
+            <xs:enumeration value="symmetric"/>
+            <xs:enumeration value="asymmetric"/>
+            <xs:enumeration value="antisymmetric"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="Transitivity">
+        <xs:restriction base="iso-11179:String">
+            <xs:enumeration value="transitive"/>
+            <xs:enumeration value="intransitive"/>
+            <xs:enumeration value="antitransitive"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="Binary_Relation">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Relation">
+                <xs:sequence>
+                    <xs:element name="reflexivity" type="iso-11179:Reflexivity" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="symmetry" type="iso-11179:Symmetry" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="transitivity" type="iso-11179:Transitivity" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="Assertion">
+        <xs:sequence>
+            <xs:group ref="iso-11179:Identified_Item" minOccurs="0" maxOccurs="1"/>
+            <xs:group ref="iso-11179:Designatable_Item" minOccurs="0" maxOccurs="1"/>
+
+            <xs:element name="concept" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="formula" type="iso-11179:Text" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Link">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Assertion">
+                <xs:sequence>
+                    <xs:element name="link_end" minOccurs="2" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="concept" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+                                <xs:element name="role" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:group name="Classifiable_Item">
+        <xs:sequence>
+            <xs:element name="classifier" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="classification" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="concept" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:complexType name="Metadata_Item">
+        <xs:sequence>
+            <xs:group ref="iso-11179:Identified_Item" minOccurs="0" maxOccurs="1"/>
+            <xs:group ref="iso-11179:Designatable_Item" minOccurs="0" maxOccurs="1"/>
+            <xs:group ref="iso-11179:Classifiable_Item" minOccurs="0" maxOccurs="1"/>
+            <xs:choice>
+                <xs:group ref="iso-11179:Administered_Item" minOccurs="0" maxOccurs="1"/>
+                <xs:group ref="iso-11179:Attached_Item" minOccurs="0" maxOccurs="1"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Concept_System">
+        <xs:sequence>
+            <xs:element name="item_metadata" type="iso-11179:Metadata_Item" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="notation" type="iso-11179:Notation" minOccurs="0" maxOccurs="1"/>
+            
+            <xs:element name="imported_concept_system" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="referenced_concept_system" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
+            
+            <xs:element name="sourced_concept" type="iso-11179:Concept" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="member_concept" type="iso-11179:Concept" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="included_assertion" type="iso-11179:Assertion" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+        
+
+</xs:schema>

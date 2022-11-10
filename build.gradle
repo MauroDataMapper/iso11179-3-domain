@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'com.intershop.gradle.jaxb' version '5.1.0'
+    id 'maven-publish'
+}
+
+
+group 'uk.ac.ox.softeng.maurodatamapper'
+version '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation group: 'org.apache.groovy', name: 'groovy-all', version: '4.0.6'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.1'
+
+}
+
+sourceSets.main.java.srcDirs = ['build/generated/jaxb/java','src/main/java']
+sourceSets.test.groovy.srcDirs = ['src/test/groovy']
+
+test {
+    useJUnitPlatform()
+}
+
+jaxb {
+    // generate java code from schema
+    javaGen {
+        //generates a 'project' schema file from existing java code
+        iso11179Message {
+            schema = file('src/main/resources/iso11179-3_message.xsd')
+            packageName = "uk.ac.ox.softeng.maurodatamapper.iso11179.domain"
+            //binding = file('binding.xjb')
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
