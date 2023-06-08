@@ -12,7 +12,7 @@ buildscript {
 
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'groovy'
     id 'com.intershop.gradle.jaxb' version '5.1.0'
     id 'maven-publish'
@@ -38,6 +38,12 @@ dependencies {
 sourceSets.main.java.srcDirs = ['build/generated/jaxb/java','src/main/java']
 sourceSets.test.groovy.srcDirs = ['src/test/groovy']
 
+license {
+    include '**/*/*.groovy'
+}
+
+
+
 test {
     useJUnitPlatform()
 }
@@ -49,6 +55,7 @@ jaxb {
         iso11179Message {
             schema = file('src/main/resources/iso11179-3_message.xsd')
             packageName = "uk.ac.ox.softeng.maurodatamapper.iso11179.domain"
+
             //binding = file('binding.xjb')
         }
     }
