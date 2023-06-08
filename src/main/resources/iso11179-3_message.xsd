@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
-    xmlns:iso-11179="https://www.iso.org/11179/-3/2012"
-    targetNamespace="https://www.iso.org/11179/-3/2012">
-    
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           xmlns:iso-11179="https://www.iso.org/11179/-3/2012"
+           targetNamespace="https://www.iso.org/11179/-3/2012">
+
     <xs:include schemaLocation="iso11179-3_four_corners.xsd"/>
     <xs:simpleType name="message-standard">
         <xs:restriction base="xs:string">
             <xs:enumeration value="ISO/IEC 19583-26"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="message-conformance-level">
         <xs:restriction base="xs:string">
             <xs:enumeration value="basic">
                 <xs:annotation>
                     <xs:documentation>
-                        the XML vocabulary in these schemas is observed with meanings largely preserved from the source system.  
+                        the XML vocabulary in these schemas is observed with meanings largely preserved from the source system.
                         However, certain required elements may not be present
                     </xs:documentation>
                 </xs:annotation>
@@ -23,7 +23,7 @@
             <xs:enumeration value="basic-extended">
                 <xs:annotation>
                     <xs:documentation>
-                        the XML vocabulary in these schemas is observed with meanings largely preserved from the source system.   
+                        the XML vocabulary in these schemas is observed with meanings largely preserved from the source system.
                         However, certain required elements may not be present, and additional elements may be present
                     </xs:documentation>
                 </xs:annotation>
@@ -31,7 +31,7 @@
             <xs:enumeration value="strict">
                 <xs:annotation>
                     <xs:documentation>
-                        the XML vocabulary and cardinality in these schemas is observed exactly, 
+                        the XML vocabulary and cardinality in these schemas is observed exactly,
                         all documents will validate against these schemas
                         extension elements are only present as slotted values
                     </xs:documentation>
@@ -39,7 +39,7 @@
             </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
-        
+
     <xs:element name="metadata_bundle">
         <xs:complexType>
             <xs:sequence>
@@ -50,20 +50,26 @@
                 <xs:element name="content">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="Namespace" type='iso-11179:Namespace' minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Individual" type="iso-11179:Individual" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Organization" type="iso-11179:Organization" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Contact" type="iso-11179:Contact" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Namespace" type="iso-11179:Namespace" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Naming_Convention" type="iso-11179:Naming_Convention" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Reference_Document" type="iso-11179:Reference_Document"  minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Context" type="iso-11179:Context"  minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Concept_System" type="iso-11179:Concept_System"  minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Enumerated_Conceptual_Domain" type="iso-11179:Enumerated_Conceptual_Domain"  minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Described_Conceptual_Domain" type="iso-11179:Described_Conceptual_Domain"  minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Defined_Conceptual_Domain" type="iso-11179:Defined_Conceptual_Domain"  minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Data_Element_Concept" type="iso-11179:Data_Element_Concept" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Datatype" type="iso-11179:Datatype" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Enumerated_Value_Domain" type="iso-11179:Enumerated_Value_Domain" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Described_Value_Domain" type="iso-11179:Described_Value_Domain" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Defined_Value_Domain" type="iso-11179:Defined_Value_Domain" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Value_Domain" type="iso-11179:Value_Domain" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Data_Element" type="iso-11179:Data_Element" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="Value_Domain_Subset" type="iso-11179:Value_Domain_Subset" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="Data_Element_Derivation" type="iso-11179:Data_Element_Derivation" minOccurs="0" maxOccurs="unbounded"/>
-                            <xs:element name="Naming_Convention" type="iso-11179:Naming_Convention" minOccurs="0" maxOccurs="unbounded"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
-    xmlns:iso-11179="https://www.iso.org/11179/-3/2012"
-    targetNamespace="https://www.iso.org/11179/-3/2012">
-    
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           xmlns:iso-11179="https://www.iso.org/11179/-3/2012"
+           targetNamespace="https://www.iso.org/11179/-3/2012">
+
     <xs:include schemaLocation="iso11179-3_common_facilities.xsd"/>
-    
+
     <!--units of measure shared inline with value domains or dimensionalities-->
     <xs:complexType name="Unit_of_Measure">
         <xs:complexContent>
             <xs:extension base="iso-11179:Concept"/>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="Measure_Class">
         <xs:sequence>
             <xs:group ref="iso-11179:Designatable_Item" minOccurs="0" maxOccurs="1"/>
-                    
+
             <xs:element name="member_unit" type="iso-11179:Unit_of_Measure" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Dimensionality">
         <xs:complexContent>
             <xs:extension base="iso-11179:Concept">
@@ -28,23 +28,23 @@
                         <xs:group ref="iso-11179:Administered_Item"/>
                         <xs:group ref="iso-11179:Attached_Item"/>
                     </xs:choice>
-                    
+
                     <xs:element name="coordinate_indicator" type="iso-11179:Boolean" minOccurs="0" maxOccurs="1"/>
                     <xs:element name="applicable_units" type="iso-11179:Measure_Class" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="Conceptual_Domain" abstract="true">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="dimensionality" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
             <xs:element name="representation" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/><!--references Value_Domain instances-->
             <xs:element name="usage" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Value_Meaning">
         <xs:complexContent>
             <xs:extension base="iso-11179:Concept">
@@ -56,7 +56,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="Enumerated_Conceptual_Domain">
         <xs:complexContent>
             <xs:extension base="iso-11179:Conceptual_Domain">
@@ -66,7 +66,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="Described_Conceptual_Domain">
         <xs:complexContent>
             <xs:extension base="iso-11179:Conceptual_Domain">
@@ -75,10 +75,39 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
-    </xs:complexType>    
+    </xs:complexType>
+
+    <xs:complexType name="Conceptual_Domain_Definition">
+        <xs:sequence>
+            <xs:element name="definition_expression" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="definition_grammar" type="iso-11179:String" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="source_uri" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Defined_Value_Meaning">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Concept"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Defined_Conceptual_Domain">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Conceptual_Domain">
+                <xs:sequence>
+                    <xs:element name="begin_date" type="iso-11179:Date" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="end_date" type="iso-11179:Date" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="locked_date" type="iso-11179:Date" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="expanded_on" type="iso-11179:Datetime" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="definition" type="iso-11179:Conceptual_Domain_Definition" minOccurs="1" maxOccurs="unbounded"/>
+                    <xs:element name="member" type="iso-11179:Defined_Value_Meaning" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <xs:complexType name="Datatype">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:group ref="iso-11179:Identified_Item" minOccurs="1" maxOccurs="1"/>
             <xs:element name="name" type="iso-11179:String" minOccurs="1"/>
             <xs:element name="description" type="iso-11179:Text" minOccurs="1"/>
@@ -88,11 +117,11 @@
     </xs:complexType>
 
     <xs:complexType name="Value_Domain" abstract="true">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="datatype" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
             <xs:element name="maximum_character_quantity" type="iso-11179:Integer" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="format" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>            
+            <xs:element name="format" type="iso-11179:String" minOccurs="0" maxOccurs="1"/>
             <xs:element name="unit_of_measure" type="iso-11179:Unit_of_Measure" minOccurs="0" maxOccurs="1"/>
             <xs:element name="subdomain" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="superdomain" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
@@ -100,7 +129,7 @@
             <xs:element name="usage" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Permissible_Value">
         <xs:all>
             <xs:element name="permitted_value" type="iso-11179:Value" minOccurs="1"/>
@@ -109,13 +138,32 @@
             <xs:element name="meaning" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
         </xs:all>
     </xs:complexType>
-    
+
+    <xs:complexType name="Defined_Permissible_Value">
+        <xs:all>
+            <xs:element name="permitted_value" type="iso-11179:Value" minOccurs="1"/>
+            <xs:element name="meaning"  type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="Defined_Value_Domain">
+        <xs:complexContent>
+            <xs:extension base="iso-11179:Value_Domain">
+                <xs:sequence>
+                    <xs:element name="member" type="iso-11179:Permissible_Value" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="begin_date" type="iso-11179:Date" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="end_date" type="iso-11179:Date" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="Enumerated_Value_Domain">
         <xs:complexContent>
             <xs:extension base="iso-11179:Value_Domain">
                 <xs:sequence>
                     <xs:element name="member" type="iso-11179:Permissible_Value" minOccurs="1" maxOccurs="unbounded"/>
-                </xs:sequence>  
+                </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -129,23 +177,23 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="Object_Class">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="data_element_concept" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Property">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="data_element_concept" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Data_Element_Concept">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="object_class" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
             <xs:element name="property" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
@@ -153,24 +201,24 @@
             <xs:element name="representation" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/><!--data element-->
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Derivation_Rule">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="specification" type="iso-11179:Text" minOccurs="1" maxOccurs="1"/>
             <xs:element name="notation" type="iso-11179:Notation" minOccurs="1" maxOccurs="1"/>
             <xs:element name="application" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Data_Element_Derivation">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="rule" type="iso-11179:Derivation_Rule" minOccurs="1" maxOccurs="1"/>
             <xs:element name="input" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="output" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Data_Element_Example">
         <xs:sequence>
             <xs:element name="example_item" type="iso-11179:Text" minOccurs="1" maxOccurs="unbounded"/>
@@ -178,14 +226,30 @@
             <xs:element name="exhibitor" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Data_Element">
-        <xs:sequence>                    
+        <xs:sequence>
             <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
             <xs:element name="precision" type="iso-11179:Integer" minOccurs="0" maxOccurs="1"/>
             <xs:element name="example" type="iso-11179:Data_Element_Example" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="domain" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
             <xs:element name="meaning" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Data_Element_Values_In_Context">
+        <xs:sequence>
+            <xs:element name="data_element" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="context" type="iso-11179:Scoped_Identifier" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Value_Domain_Subset">
+        <xs:sequence>
+            <xs:element name="item_metadata" type="iso-11179:Metadata_Item"/>
+            <xs:element name="parent_domain" type="iso-11179:Scoped_Identifier" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="contained_value" type="iso-11179:Value"/><!--must be a value listed in the parent domain-->
+            <xs:element name="usage" type="iso-11179:Data_Element_Values_In_Context" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>
