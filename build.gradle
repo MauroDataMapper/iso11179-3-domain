@@ -1,7 +1,12 @@
 buildscript {
     repositories {
+        mavenLocal()
+        maven {url 'https://jenkins.cs.ox.ac.uk/artifactory/plugins-snapshot'}
+        maven {url 'https://jenkins.cs.ox.ac.uk/artifactory/plugins-release'}
         mavenCentral()
-        jcenter()
+    }
+    dependencies {
+        classpath "uk.ac.ox.softeng.maurodatamapper.gradle:mdm-gradle-plugin:$mdmGradlePluginVersion"
     }
 }
 
@@ -13,9 +18,8 @@ plugins {
     id 'maven-publish'
 }
 
+apply plugin: 'uk.ac.ox.softeng.maurodatamapper.gradle.mdm-gradle'
 
-group 'uk.ac.ox.softeng.maurodatamapper'
-version '1.0.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
