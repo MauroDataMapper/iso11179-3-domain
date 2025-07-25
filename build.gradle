@@ -1,33 +1,42 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven {url 'https://jenkins.cs.ox.ac.uk/artifactory/plugins-snapshot'}
-        maven {url 'https://jenkins.cs.ox.ac.uk/artifactory/plugins-release'}
         mavenCentral()
+        maven { url "https://mauro-repository.com/libs-release-local" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://repo.gradle.org/gradle/libs-releases-local/' }
+        maven { url "https://mauro-repository.com/libs-snapshot-local" }
+        maven { url "https://mauro-repository.com/plugins-release-local" }
+        maven { url "https://mauro-repository.com/plugins-snapshot-local" }
+
     }
-    dependencies {
-        classpath "uk.ac.ox.softeng.maurodatamapper.gradle:mdm-gradle-plugin:$mdmGradlePluginVersion"
-    }
+
 }
 
 
 plugins {
-    id 'java-library'
     id 'groovy'
-    id 'com.intershop.gradle.jaxb' version '5.1.0'
+    id 'java-library'
+    id 'com.intershop.gradle.jaxb' version '7.0.2'
     id 'maven-publish'
-}
+    id "com.vanniktech.maven.publish" version "0.29.0"
+    id "com.github.hierynomus.license" version "0.16.1"
 
-apply plugin: 'uk.ac.ox.softeng.maurodatamapper.gradle.mdm-gradle'
+}
 
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven {url "https://plugins.gradle.org/m2/"}
+    maven {url "https://mauro-repository.com/libs-release-local"}
+    maven {url "https://mauro-repository.com/libs-snapshot-local"}
+    maven {url "https://mauro-repository.com/plugins-release-local"}
 }
 
 dependencies {
 
-    implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.10'
+    implementation 'org.apache.groovy:groovy-all:4.0.28'
     implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.1'
 
@@ -39,9 +48,11 @@ sourceSets.main.java.srcDirs = ['build/generated/jaxb/java','src/main/java']
 sourceSets.test.groovy.srcDirs = ['src/test/groovy']
 
 license {
-    include '**/*/*.groovy'
+    excludes(["**/*.java",
+              "**/*.xml",
+              "**/*.xsd"])
+    header(project.file('NOTICE'))
 }
-
 
 
 test {
@@ -54,7 +65,7 @@ jaxb {
         //generates a 'project' schema file from existing java code
         iso11179Message {
             schema = file('src/main/resources/iso11179-3_message.xsd')
-            packageName = "uk.ac.ox.softeng.maurodatamapper.iso11179.domain"
+            packageName = "org.maurodata.iso11179.domain"
 
             //binding = file('binding.xjb')
         }
@@ -62,12 +73,23 @@ jaxb {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+    repositories {
+        maven {
+            name = "MauroSnapshot"
+            url = "https://mauro-repository.com/libs-snapshot-local"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
-    repositories {
-        mavenLocal()
+
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'org.maurodata'
+            artifactId = 'iso11179-domain'
+            version = "2.0.0-SNAPSHOT"
+            from components.java
+        }
     }
 }

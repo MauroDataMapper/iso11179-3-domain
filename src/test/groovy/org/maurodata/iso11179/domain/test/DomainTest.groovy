@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 University of Oxford and NHS England
+ * Copyright 2020-2025 University of Oxford and NHS England
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package uk.ac.ox.softeng.maurodatamapper.iso11179.test
+package org.maurodata.iso11179.domain.test
 
 import jakarta.xml.bind.JAXBException
 import org.junit.jupiter.api.Test
-import uk.ac.ox.softeng.maurodatamapper.iso11179.domain.MetadataBundle
-import uk.ac.ox.softeng.maurodatamapper.iso11179.domain.RegistrySpecification
-import uk.ac.ox.softeng.maurodatamapper.iso11179.domain.helpers.MarshalHelper
+import org.maurodata.iso11179.domain.MetadataBundle
+import org.maurodata.iso11179.domain.RegistrySpecification
+import org.maurodata.iso11179.domain.helpers.MarshalHelper
 
 class DomainTest {
 
